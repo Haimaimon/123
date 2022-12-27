@@ -16,6 +16,21 @@ def home(request):
     'jobs': jobs
   }
   return render(request, 'home.html',context)
+
+def registerPage(request):
+      form = CreateUserForm()
+      if request.method == 'POST':
+
+          form = CreateUserForm(request.POST)
+          if form.is_valid():
+              form.save()
+              user = form.cleaned_data.get('username')
+              messages.success(request, 'Account was created for ' + user)
+              return redirect('index')
+
+      context = {'form': form}
+      return render(request, 'register.html', context)
+
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
