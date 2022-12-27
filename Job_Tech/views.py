@@ -50,8 +50,32 @@ def my_profile(request):
     context = {}
     return render(request, 'profile.html',context)
 
+def edit(request, id):
+  if request.method == 'POST':
+    jobs = Job.objects.get(pk=id)
+    form = JobForm(request.POST, instance=jobs)
+    if form.is_valid():
+      form.save()
+      return render(request, 'edit.html', {
+        'form': form,
+        'success': True
+      })
+  else:
+    jobs = Job.objects.get(pk=id)
+    form = JobForm(instance=jobs)
+  return render(request, 'edit.html', {
+    'form': form
+  })
+
 def delete(request, id):
   if request.method == 'POST':
     user = Job.objects.get(pk=id)
     user.delete()
   return HttpResponseRedirect(reverse('index'))
+
+def studentjobs(request):
+    studentjob = StudentJobs.objects.all()
+    context ={
+      'studentjob':studentjob,
+    }
+    return render(request, 'studentjob.html',context)
