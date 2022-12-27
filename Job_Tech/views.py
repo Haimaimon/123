@@ -45,3 +45,13 @@ def loginPage(request):
             messages.info(request, 'username OR password is incorrect')
     context = {}
     return render(request, 'login.html', context)
+
+def my_profile(request):
+    context = {}
+    return render(request, 'profile.html',context)
+
+def delete(request, id):
+  if request.method == 'POST':
+    user = Job.objects.get(pk=id)
+    user.delete()
+  return HttpResponseRedirect(reverse('index'))
