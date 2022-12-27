@@ -13,6 +13,7 @@ urlpatterns = [
     path('studentjob/', views.studentjobs, name="studentjob"),
     path('add/', views.add, name= "add"),
     path('<int:id>', views.view_jobs, name="view_jobs"),
+    path('index/', views.index, name="index"),
 
 
 

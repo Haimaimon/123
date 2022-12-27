@@ -108,3 +108,10 @@ def studentjobs(request):
       'studentjob':studentjob,
     }
     return render(request, 'studentjob.html',context)
+def index(request):
+  jobs = Job.objects.all()
+  context ={
+        'jobs': jobs,
+    }
+  template = loader.get_template('index.html')
+  return HttpResponse(template.render(context, request))
