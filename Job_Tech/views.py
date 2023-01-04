@@ -47,7 +47,9 @@ def loginPage(request):
             messages.info(request, 'username OR password is incorrect')
     context = {}
     return render(request, 'login.html', context)
-
+def logoutUser(request):
+  logout(request)
+  return redirect('login')
 def view_jobs(request, id):
   jobs = Job.objects.get(pk=id)
   return HttpResponseRedirect(reverse('index'))
