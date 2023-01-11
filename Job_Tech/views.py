@@ -6,8 +6,8 @@ from tempfile import tempdir
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import StudentJobs,JobSeeker,Hr,AllJob
-from .forms import CreateUserForm , StudentJobForm,JobSeekerForm,HrForm,AllJobsForm
+from .models import StudentJobs,JobSeeker,Hr,AllJob,FileModel
+from .forms import CreateUserForm , StudentJobForm,JobSeekerForm,HrForm,AllJobsForm,FileUploadForm
 from django.contrib.auth.forms import UserCreationForm
 from .filters import AllJobFilter
 
@@ -162,3 +162,20 @@ def profileseeker(request):
         'form': form
     }
     return render(request, 'profileseeker.html', context)
+
+def portFolio(request):
+  files = request.user.jobseeker.filemodel_set.all()
+  context = {
+    'files': files,
+  }
+  return render(request, 'portfolio.html',context)
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('portfolio')
+    else:
+        form = FileUploadForm()
+    return render(request, 'upload.html', {'form': form})

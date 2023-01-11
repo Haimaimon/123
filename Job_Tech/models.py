@@ -53,3 +53,11 @@ class JobSeeker(models.Model):
 
     def _str_(self):
         return f'{self.user}'
+
+class FileModel(models.Model):
+    jobseeker = models.ForeignKey(JobSeeker, null=True, on_delete=models.SET_NULL)
+    desc_file = models.TextField()
+    file = models.FileField(upload_to='files/')
+
+    def __str__(self):
+        return f'{self.file}'
