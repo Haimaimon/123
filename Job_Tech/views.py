@@ -6,8 +6,8 @@ from tempfile import tempdir
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Job, StudentJobs
-from .forms import  JobForm , CreateUserForm , StudentJobForm
+from .models import Job, StudentJobs,JobSeeker
+from .forms import  JobForm , CreateUserForm , StudentJobForm,JobSeekerForm
 from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
@@ -117,3 +117,16 @@ def index(request):
     }
   template = loader.get_template('index.html')
   return HttpResponse(template.render(context, request))
+
+
+def userPage(request):
+    allJobs = AllJob.objects.all()
+    myFilter = AllJobFilter(request.GET, queryset=allJobs)
+    allJobs = myFilter.qs
+
+    context = {
+        'alljobs': allJobs,
+        'myFilter': myFilter,
+    }
+
+    return render(request, 'jobseeker.html', context)

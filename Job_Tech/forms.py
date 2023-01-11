@@ -1,5 +1,5 @@
 from django import forms
-from .models import Job, StudentJobs
+from .models import Job, StudentJobs,JobSeeker
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -45,3 +45,7 @@ class StudentJobForm(forms.ModelForm):
             'comapny': forms.TextInput(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
         }
+class JobSeekerForm(forms.ModelForm):
+    class Meta:
+        model = JobSeeker
+        fields = '_all_'
