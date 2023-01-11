@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'index' %}">
+              <a class="nav-link" href="{% url 'user' %}">
                 <i class="fa-solid fa-list fa-lg"></i> כל המשרות
               </a>
             </li>
@@ -30,13 +30,14 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'profile' %}">
-                <i class="fa-solid fa-plus fa-lg"></i> פרופיל אישי
+              <a class="nav-link" href="{% url 'searchjob' %}">
+                <i class="fa-solid fa-plus fa-lg"></i> מחפשי עבודה
               </a>
             </li>
           </ul>
         </div>
       </div>
+
     </nav>
     <div class="container-fluid">
       {% block body %}

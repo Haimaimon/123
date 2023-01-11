@@ -5,7 +5,7 @@
   {% if success %}
     <div class="alert alert-success" role="alert">
       הוספת המשרה בוצעה בהצלחה.
-      <a href="{% url 'index' %}" class="alert-link">גש לעמוד הראשי.</a>
+      <a href="{% url 'user' %}" class="alert-link">גש לעמוד הראשי.</a>
     </div>
   {% else %}
     <div class="row justify-content-center">
@@ -19,7 +19,7 @@
               {% csrf_token %}
               {{ form.as_p }}
               <button type="submit" class="btn btn-primary">הוספה</button>
-              <a href="{% url 'index' %}" class="btn btn-secondary">ביטול</a>
+              <a href="{% url 'user' %}" class="btn btn-secondary">ביטול</a>
             </form>
           </div>
         </div>
