@@ -147,3 +147,18 @@ def userr(request):
     'alljobs': alljobs,
   }
   return render(request, 'user.html', context)
+
+
+def profileseeker(request):
+    jobseeker = request.user.jobseeker
+    form = JobSeekerForm(instance=jobseeker)
+
+    if request.method == 'POST':
+        form = JobSeekerForm(request.POST, request.FILES, instance=jobseeker)
+        if form.is_valid:
+            form.save()
+            return redirect('profileseeker')
+    context = {
+        'form': form
+    }
+    return render(request, 'profileseeker.html', context)
