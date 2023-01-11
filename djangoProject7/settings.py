@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Job_Tech.apps.JobTechConfig',
+
     'django_filters',
 ]
 

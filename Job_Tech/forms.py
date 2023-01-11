@@ -1,5 +1,5 @@
 from django import forms
-from .models import Job, StudentJobs,JobSeeker
+from .models import StudentJobs,JobSeeker,AllJob,Hr
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -10,24 +10,24 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class JobForm(forms.ModelForm):
+class HrForm(forms.ModelForm):
     class Meta:
-        model = Job
-        fields = ['title', 'desc', 'company']
-        labels = {
-            'title': 'Ttile',
-            'desc': 'Desc',
-            'company': 'Company',
-
-        }
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'desc': forms.TextInput(attrs={'class': 'form-control'}),
-            'comapny': forms.TextInput(attrs={'class': 'form-control'}),
-
-        }
+        model = Hr
+        fields = '__all__'
+        exclude = ['user']
 
 
+class AllJobsForm(forms.ModelForm):
+    AGE_CHOICES = [
+        ('18-24', '18-24'),
+        ('25-35', '25-35'),
+        ('35+', '35+'),
+    ]
+    age = forms.ChoiceField(choices=AGE_CHOICES, required=True)
+
+    class Meta:
+        model = AllJob
+        fields = '__all__'
 class StudentJobForm(forms.ModelForm):
     class Meta:
         model = StudentJobs

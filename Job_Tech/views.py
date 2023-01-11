@@ -6,9 +6,10 @@ from tempfile import tempdir
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Job, StudentJobs,JobSeeker
-from .forms import  JobForm , CreateUserForm , StudentJobForm,JobSeekerForm
+from .models import StudentJobs,JobSeeker,Hr,AllJob
+from .forms import CreateUserForm , StudentJobForm,JobSeekerForm,HrForm,AllJobsForm
 from django.contrib.auth.forms import UserCreationForm
+from .filters import AllJobFilter
 
 # Create your views here.
 
@@ -51,35 +52,41 @@ def logoutUser(request):
   logout(request)
   return redirect('login')
 def view_jobs(request, id):
-  jobs = Job.objects.get(pk=id)
+  allJobs = AllJob.objects.get(pk=id)
   return HttpResponseRedirect(reverse('index'))
+
 
 def my_profile(request):
     context = {}
     return render(request, 'profile.html',context)
 
+
 def add(request):
     if request.method == 'POST':
-        form = JobForm(request.POST)
+        form = AllJobsForm(request.POST)
         if form.is_valid():
+            new_hr = form.cleaned_data['hr']
             new_title = form.cleaned_data['title']
             new_desc = form.cleaned_data['desc']
             new_company = form.cleaned_data['company']
+            new_location = form.cleaned_data['location']
 
-            Jobs = Job(
+            Alljobs = AllJob(
+                hr=new_hr,
                 title=new_title,
                 desc=new_desc,
-                company=new_company
+                company=new_company,
+                location=new_location
             )
-            Jobs.save()
+            Alljobs.save()
             return render(request, 'add.html', {
-                'form': JobForm(),
+                'form': AllJobsForm(),
                 'success': True
             })
     else:
-        form = JobForm()
+        form = AllJobsForm()
     return render(request, 'add.html', {
-        'form': JobForm()
+        'form': AllJobsForm()
     })
 def edit(request, id):
   if request.method == 'POST':
@@ -110,14 +117,6 @@ def studentjobs(request):
       'studentjob':studentjob,
     }
     return render(request, 'studentjob.html',context)
-def index(request):
-  jobs = Job.objects.all()
-  context ={
-        'jobs': jobs,
-    }
-  template = loader.get_template('index.html')
-  return HttpResponse(template.render(context, request))
-
 
 def userPage(request):
     allJobs = AllJob.objects.all()
@@ -130,3 +129,11 @@ def userPage(request):
     }
 
     return render(request, 'jobseeker.html', context)
+
+def userr(request):
+  alljobs = request.user.hr.alljob_set.all()
+  print('ALLJOBS',alljobs)
+  context = {
+    'alljobs': alljobs,
+  }
+  return render(request, 'user.html', context)
