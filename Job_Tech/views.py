@@ -57,9 +57,19 @@ def view_jobs(request, id):
 
 
 def my_profile(request):
-    context = {}
-    return render(request, 'profile.html',context)
+    hr = request.user.hr
+    form = HrForm(instance=hr)
 
+    if request.method == 'POST':
+        form = HrForm(request.POST, instance=hr)
+        if form.is_valid():
+            print('succsed')
+            form.save()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'profile.html', context)
 
 def add(request):
     if request.method == 'POST':
@@ -107,9 +117,9 @@ def edit(request, id):
 
 def delete(request, id):
   if request.method == 'POST':
-    user = Job.objects.get(pk=id)
-    user.delete()
-  return HttpResponseRedirect(reverse('index'))
+    alljobs = AllJob.objects.get(pk=id)
+    alljobs.delete()
+  return HttpResponseRedirect(reverse('user'))
 
 def studentjobs(request):
     studentjob = StudentJobs.objects.all()
