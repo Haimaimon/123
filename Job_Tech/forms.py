@@ -1,5 +1,5 @@
 from django import forms
-from .models import StudentJobs,JobSeeker,AllJob,Hr
+from .models import StudentJobs,JobSeeker,AllJob,Hr,FileModel
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -49,3 +49,8 @@ class JobSeekerForm(forms.ModelForm):
     class Meta:
         model = JobSeeker
         fields = '_all_'
+
+class FileUploadForm(forms.ModelForm):
+    class Meta:
+        model = FileModel
+        fields = '__all__'
