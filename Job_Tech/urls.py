@@ -21,6 +21,7 @@ urlpatterns = [
     path('profileseeker/', views.profileseeker, name="profileseeker"),
     path('delete/', views.deleteProfile, name="delete"),
     path('searchjob/', views.search_job, name="searchjob"),
+    path('job_submission/', views.submission, name="job_submission"),
 
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="password_reset.html"), name="reset_password"),
     path('reset_password_send/', auth_views.PasswordResetDoneView.as_view(template_name="password_reset_send.html"), name="password_reset_done"),
