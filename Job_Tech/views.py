@@ -154,10 +154,14 @@ def profileseeker(request):
     form = JobSeekerForm(instance=jobseeker)
 
     if request.method == 'POST':
-        form = JobSeekerForm(request.POST, request.FILES, instance=jobseeker)
-        if form.is_valid:
+        form = JobSeekerForm(request.POST, instance=jobseeker)
+        if form.is_valid():
+            jobseeker.save()
+            user = request.user
+            user.save()
+            print('succsed')
             form.save()
-            return redirect('profileseeker')
+
     context = {
         'form': form
     }
@@ -191,3 +195,12 @@ def deleteProfile(request):
       'form':form
     }
     return render(request,'delete.html',context)
+
+def search_job(request):
+  allseeker = JobSeeker.objects.all()
+  files = FileModel.objects.all()
+  context = {
+    'allseeker':allseeker,
+    'files':files
+  }
+  return render(request,'searchjob.html',context)
