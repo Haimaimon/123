@@ -98,10 +98,10 @@ def add(request):
     return render(request, 'add.html', {
         'form': AllJobsForm()
     })
-def edit(request, id):
+def edit(request,id):
+  alljobs = AllJob.objects.get(pk=id)
+  form = AllJobsForm(request.POST, instance=alljobs)
   if request.method == 'POST':
-    jobs = Job.objects.get(pk=id)
-    form = JobForm(request.POST, instance=jobs)
     if form.is_valid():
       form.save()
       return render(request, 'edit.html', {
@@ -109,8 +109,8 @@ def edit(request, id):
         'success': True
       })
   else:
-    jobs = Job.objects.get(pk=id)
-    form = JobForm(instance=jobs)
+    alljobs = AllJob.objects.get(pk=id)
+    form = AllJobsForm(instance=alljobs)
   return render(request, 'edit.html', {
     'form': form
   })
@@ -204,3 +204,7 @@ def search_job(request):
     'files':files
   }
   return render(request,'searchjob.html',context)
+
+def submission(request):
+  context = {}
+  return render(request, 'job_submission.html',context)
