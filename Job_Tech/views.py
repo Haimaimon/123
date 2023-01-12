@@ -208,3 +208,21 @@ def search_job(request):
 def submission(request):
   context = {}
   return render(request, 'job_submission.html',context)
+
+
+def allHr(request):
+    alljobs = AllJob.objects.all()
+    hr = Hr.objects.all()
+
+    context = {
+        'alljobs': alljobs,
+        'hr': hr,
+    }
+    return render(request, 'allhr.html', context)
+
+def portFolio_hr(request):
+  files = FileModel.objects.all()
+  context = {
+    'files': files,
+  }
+  return render(request, 'portfolio_hr.html',context)
