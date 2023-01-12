@@ -3,11 +3,13 @@
     margin:0;
     padding:0;
 }
+#picture {
+        background-image: url("office.jpg")
+}
 body{
     font-size: 18px;
     font-family: Georgia,times,serif;
     background-color: beige;
-    background-image: url("office.jpg")
 }
 h1,h2,h3 {
     font-family: Halvetica,Arial,sans-serif;
@@ -101,4 +103,19 @@ article p{
     display: inline-block;
     font-size: 16px;
     cursor: pointer;
+}
+#pirsomot {
+    text-align: center;
+    background-color: grey;
+}
+#pirsomot p{
+    font-size:1.5em;
+    font-style:inherit;
+    border:solid 1px black;
+    color:pink;
+
+}
+#pirsomot a{
+    font-size: 2em;
+
 }
