@@ -1,14 +1,11 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% block body %}
-        {{request.user.hr}}
                     <form>
                             <form method="POST" action="" enctype="multipart/form-data">
                               {% csrf_token %}
                               {{ form.as_p }}
 
-                              <input class="btn btn-primary" type="submit" value="עדכן">
-                              <a href="{% url 'delete' %}" class="btn btn-danger">מחיקת פרופיל</a>
+                              <input class="btn btn-primary" type="submit" value="Upload">
                             </form>
                     </form>
-
 {% endblock %}

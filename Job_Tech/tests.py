@@ -1,5 +1,5 @@
 from django.test import TestCase
-
+from Job_Tech import models
 # Create your tests here.
 
 class URLTests(TestCase):
@@ -22,3 +22,4 @@ class URLTests(TestCase):
     def test_Reg_Page(self):
         response = self.client.get('Reg')
         self.assertEqual(response.status_code, 404)
+

@@ -6,9 +6,10 @@ from tempfile import tempdir
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Job, StudentJobs
-from .forms import  JobForm , CreateUserForm , StudentJobForm
+from .models import StudentJobs,JobSeeker,Hr,AllJob,FileModel
+from .forms import CreateUserForm , StudentJobForm,JobSeekerForm,HrForm,AllJobsForm,FileUploadForm
 from django.contrib.auth.forms import UserCreationForm
+from .filters import AllJobFilter
 
 # Create your views here.
 
@@ -51,35 +52,51 @@ def logoutUser(request):
   logout(request)
   return redirect('login')
 def view_jobs(request, id):
-  jobs = Job.objects.get(pk=id)
+  allJobs = AllJob.objects.get(pk=id)
   return HttpResponseRedirect(reverse('index'))
 
+
 def my_profile(request):
-    context = {}
-    return render(request, 'profile.html',context)
+    hr = request.user.hr
+    form = HrForm(instance=hr)
+
+    if request.method == 'POST':
+        form = HrForm(request.POST, instance=hr)
+        if form.is_valid():
+            print('succsed')
+            form.save()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'profile.html', context)
 
 def add(request):
     if request.method == 'POST':
-        form = JobForm(request.POST)
+        form = AllJobsForm(request.POST)
         if form.is_valid():
+            new_hr = form.cleaned_data['hr']
             new_title = form.cleaned_data['title']
             new_desc = form.cleaned_data['desc']
             new_company = form.cleaned_data['company']
+            new_location = form.cleaned_data['location']
 
-            Jobs = Job(
+            Alljobs = AllJob(
+                hr=new_hr,
                 title=new_title,
                 desc=new_desc,
-                company=new_company
+                company=new_company,
+                location=new_location
             )
-            Jobs.save()
+            Alljobs.save()
             return render(request, 'add.html', {
-                'form': JobForm(),
+                'form': AllJobsForm(),
                 'success': True
             })
     else:
-        form = JobForm()
+        form = AllJobsForm()
     return render(request, 'add.html', {
-        'form': JobForm()
+        'form': AllJobsForm()
     })
 def edit(request, id):
   if request.method == 'POST':
@@ -100,9 +117,9 @@ def edit(request, id):
 
 def delete(request, id):
   if request.method == 'POST':
-    user = Job.objects.get(pk=id)
-    user.delete()
-  return HttpResponseRedirect(reverse('index'))
+    alljobs = AllJob.objects.get(pk=id)
+    alljobs.delete()
+  return HttpResponseRedirect(reverse('user'))
 
 def studentjobs(request):
     studentjob = StudentJobs.objects.all()
@@ -110,10 +127,80 @@ def studentjobs(request):
       'studentjob':studentjob,
     }
     return render(request, 'studentjob.html',context)
-def index(request):
-  jobs = Job.objects.all()
-  context ={
-        'jobs': jobs,
+
+def userPage(request):
+    allJobs = AllJob.objects.all()
+    myFilter = AllJobFilter(request.GET, queryset=allJobs)
+    allJobs = myFilter.qs
+
+    context = {
+        'alljobs': allJobs,
+        'myFilter': myFilter,
     }
-  template = loader.get_template('index.html')
-  return HttpResponse(template.render(context, request))
+
+    return render(request, 'jobseeker.html', context)
+
+def userr(request):
+  alljobs = request.user.hr.alljob_set.all()
+  print('ALLJOBS',alljobs)
+  context = {
+    'alljobs': alljobs,
+  }
+  return render(request, 'user.html', context)
+
+
+def profileseeker(request):
+    jobseeker = request.user.jobseeker
+    form = JobSeekerForm(instance=jobseeker)
+
+    if request.method == 'POST':
+        form = JobSeekerForm(request.POST, instance=jobseeker)
+        if form.is_valid():
+            jobseeker.save()
+            user = request.user
+            user.save()
+            print('succsed')
+            form.save()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'profileseeker.html', context)
+
+def portFolio(request):
+  files = request.user.jobseeker.filemodel_set.all()
+  context = {
+    'files': files,
+  }
+  return render(request, 'portfolio.html',context)
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('portfolio')
+    else:
+        form = FileUploadForm()
+    return render(request, 'upload.html', {'form': form})
+def deleteProfile(request):
+    hr = request.user.hr
+    form = HrForm(instance=hr)
+    if request.method == 'POST':
+        hr.delete()
+        user = request.user
+        user.delete()
+        return redirect('home')
+    context = {
+      'form':form
+    }
+    return render(request,'delete.html',context)
+
+def search_job(request):
+  allseeker = JobSeeker.objects.all()
+  files = FileModel.objects.all()
+  context = {
+    'allseeker':allseeker,
+    'files':files
+  }
+  return render(request,'searchjob.html',context)
