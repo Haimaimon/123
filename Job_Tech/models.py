@@ -44,12 +44,16 @@ class JobSeeker(models.Model):
         ('Yes', 'Yes'),
         ('No', 'No'),
     )
+    USERTYPE = (
+        ('JobSeeker', 'JobSeeker'),
+    )
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, null=True)
     email = models.EmailField(max_length=50, null=True)
     education = models.CharField(max_length=50, null=True, choices=EDUCATION)
     wordwithinitiator = models.CharField(max_length=50, null=True, choices=WORKWITHINITIATOR)
+    user_type = models.CharField(max_length=50, null=True, choices=USERTYPE)
 
     def _str_(self):
         return f'{self.user}'
