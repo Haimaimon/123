@@ -179,3 +179,15 @@ def upload_file(request):
     else:
         form = FileUploadForm()
     return render(request, 'upload.html', {'form': form})
+def deleteProfile(request):
+    hr = request.user.hr
+    form = HrForm(instance=hr)
+    if request.method == 'POST':
+        hr.delete()
+        user = request.user
+        user.delete()
+        return redirect('home')
+    context = {
+      'form':form
+    }
+    return render(request,'delete.html',context)
