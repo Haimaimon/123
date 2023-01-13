@@ -10,30 +10,48 @@ from .models import StudentJobs,JobSeeker,Hr,AllJob,FileModel
 from .forms import CreateUserForm , StudentJobForm,JobSeekerForm,HrForm,AllJobsForm,FileUploadForm
 from django.contrib.auth.forms import UserCreationForm
 from .filters import AllJobFilter
+from .decorators import unauthenticated_user, allowed_users, admin_only
+from django.contrib.auth.models import Group
 
 # Create your views here.
 
 def home(request):
-  jobs = Job.objects.all()
+  alljobs = AllJob.objects.all()
   context = {
-    'jobs': jobs
+    'alljobs': alljobs
   }
   return render(request, 'home.html',context)
 
+@unauthenticated_user
 def registerPage(request):
       form = CreateUserForm()
       if request.method == 'POST':
 
           form = CreateUserForm(request.POST)
           if form.is_valid():
-              form.save()
-              user = form.cleaned_data.get('username')
-              messages.success(request, 'Account was created for ' + user)
-              return redirect('index')
+              status = form.cleaned_data['status']
+              user = form.save()
+              username = form.cleaned_data.get('username')
+
+              if status == 'hr':
+                  group = Group.objects.get(name='hr')
+                  user.groups.add(group)
+                  Hr.objects.create(
+                      user=user,
+                  )
+              else:
+                  group = Group.objects.get(name='job_seeker')
+                  user.groups.add(group)
+                  JobSeeker.objects.create(
+                      user=user,
+                  )
+              messages.success(request, 'Account was created for ' + username)
+              return redirect('login')
 
       context = {'form': form}
       return render(request, 'register.html', context)
 
+@unauthenticated_user
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -43,7 +61,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return redirect('admin')
         else:
             messages.info(request, 'username OR password is incorrect')
     context = {}
@@ -53,7 +71,7 @@ def logoutUser(request):
   return redirect('login')
 def view_jobs(request, id):
   allJobs = AllJob.objects.get(pk=id)
-  return HttpResponseRedirect(reverse('index'))
+  return HttpResponseRedirect(reverse('jobseeker'))
 
 
 def my_profile(request):
@@ -80,13 +98,15 @@ def add(request):
             new_desc = form.cleaned_data['desc']
             new_company = form.cleaned_data['company']
             new_location = form.cleaned_data['location']
+            new_age = form.cleaned_data['age']
 
             Alljobs = AllJob(
                 hr=new_hr,
                 title=new_title,
                 desc=new_desc,
                 company=new_company,
-                location=new_location
+                location=new_location,
+                age=new_age
             )
             Alljobs.save()
             return render(request, 'add.html', {
@@ -226,3 +246,8 @@ def portFolio_hr(request):
     'files': files,
   }
   return render(request, 'portfolio_hr.html',context)
+
+@admin_only
+def admin(request):
+  context={}
+  return render(request,'admin.html',context)
