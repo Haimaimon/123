@@ -6,8 +6,9 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    path('login/', views.loginPage, name="login"),
     path('', views.home, name="home"),
+    path('admin/', views.admin, name="admin"),
+    path('login/', views.loginPage, name="login"),
     path('register/', views.registerPage,name="register"),
     path('profile/', views.my_profile, name="profile"),
     path('delete/<int:id>', views.delete, name="delete"),
@@ -20,6 +21,8 @@ urlpatterns = [
     path('profileseeker/', views.profileseeker, name="profileseeker"),
     path('delete/', views.deleteProfile, name="delete"),
     path('searchjob/', views.search_job, name="searchjob"),
+    path('user/', views.userr, name="user"),
+    path('upload/', views.upload_file, name="upload"),
     path('job_submission/', views.submission, name="job_submission"),
     path('allhr/', views.allHr, name="allhr"),
     path('portfolio_hr/', views.portFolio_hr, name="portfolio_hr"),
